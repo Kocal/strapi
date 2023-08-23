@@ -42,7 +42,7 @@ const createUmzugProvider = (db) => {
     storage: createStorage({ db, tableName: 'strapi_migrations' }),
     context: { db },
     migrations: {
-      glob: ['*.{js,sql}', { cwd: migrationDir }],
+      glob: ['*.{js,ts,sql}', { cwd: migrationDir }],
       resolve: migrationResolver,
     },
   });
