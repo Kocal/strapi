@@ -15,21 +15,27 @@ const fetchClient = (): AxiosInstance => {
   });
 
   // Add a request interceptor to add authorization token to headers, rejects errors
-  instance.interceptors.request.use(async (config) => {
-    config.headers.Authorization = `Bearer ${auth.getToken()}`;
-  
-    return config
-  }, (error) => Promise.reject(error));
-  
-  // Add a response interceptor, let pass the response, and if error is 401, clear the app storage and reload the page
-  instance.interceptors.response.use(response => response, (error) => {
-    if (error?.response?.status === 401) {
-      auth.clearAppStorage();
-      window.location.reload();
-    }
+  instance.interceptors.request.use(
+    async (config) => {
+      config.headers.Authorization = `Bearer ${auth.getToken()}`;
 
-    throw error;
-  });
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  // Add a response interceptor, let pass the response, and if error is 401, clear the app storage and reload the page
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error?.response?.status === 401) {
+        auth.clearAppStorage();
+        window.location.reload();
+      }
+
+      throw error;
+    }
+  );
 
   return instance;
 };
